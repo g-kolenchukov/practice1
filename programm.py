@@ -29,6 +29,7 @@ class Main(QMainWindow):
         self.channel = 'all'
 
     def choose(self):
+        self.statusbar.showMessage('')
         try:
             file_dialog = QFileDialog(self)
             filename, _ = file_dialog.getOpenFileName(self, "Выбрать изображение", "", "Изображения (*.png *.jpg)")
@@ -40,9 +41,13 @@ class Main(QMainWindow):
             self.statusbar.showMessage('Ошибка! В пути к файлу присутствуют русские буквы!')
 
     def webcam(self):
-        self.cap = cv2.VideoCapture(0)
-        self.timer.start(30)
-        self.pushButton_6.setEnabled(True)
+        self.statusbar.showMessage('')
+        try:
+            self.cap = cv2.VideoCapture(0)
+            self.timer.start(30)
+            self.pushButton_6.setEnabled(True)
+        except:
+            self.statusbar.showMessage('Ошибка! Невозможно подключиться к камере!')
 
     def display_video_stream(self):
         ret, frame = self.cap.read()
@@ -51,6 +56,7 @@ class Main(QMainWindow):
             self.display_image(frame)
 
     def save(self):
+        self.statusbar.showMessage('')
         ret, frame = self.cap.read()
         if ret:
             self.current_image = frame
@@ -102,8 +108,11 @@ class Main(QMainWindow):
                         self.statusbar.showMessage('Ошибка! Картинка не задана!')
             except ValueError:
                 self.statusbar.showMessage('Ошибка! Введены некорректные данные!')
+        self.lineEdit.clear()
+        self.lineEdit_2.clear()
 
     def draw(self):
+        self.statusbar.showMessage('')
         x1 = self.lineEdit_3.text()
         y1 = self.lineEdit_4.text()
         x2 = self.lineEdit_5.text()
@@ -127,8 +136,13 @@ class Main(QMainWindow):
                         self.statusbar.showMessage('Ошибка! Картинка не задана!')
             except ValueError:
                 self.statusbar.showMessage('Ошибка! Введены некорректные данные!')
+        self.lineEdit_3.clear()
+        self.lineEdit_4.clear()
+        self.lineEdit_5.clear()
+        self.lineEdit_6.clear()
 
     def gray(self):
+        self.statusbar.showMessage('')
         if self.current_image is not None:
             gray_image = cv2.cvtColor(self.current_image, cv2.COLOR_BGR2GRAY)
             self.display_image(cv2.cvtColor(gray_image, cv2.COLOR_GRAY2RGB))
@@ -146,4 +160,3 @@ class Main(QMainWindow):
             self.channel = 'blue'
         if self.current_image is not None:
             self.display_image(self.current_image)
-
